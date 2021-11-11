@@ -1,0 +1,17 @@
+syntax = "proto3";
+package url_box;
+
+message exURLReq {
+    string oURL = 1;
+    string userID = 2;
+}
+
+message exURLRes {
+    string oURL = 1;
+    string nURL = 2;
+    int32 count = 3;
+}
+
+service GenURLService {
+    rpc GenExURL(exURLReq) returns (exURLRes);
+}
