@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package urlBox;
+
+option go_package = "ekstrah.com/go-protoBox-grpc;go_urlBox_grpc";
+
+service GenURLManagement {
+    rpc GenNewURL (ExURLReq) returns (ExURLRes) {}
+}
+
+message ExURLReq {
+    string oriURL = 1;
+    string userID = 2;
+}
+
+message ExURLRes {
+    string oriURL = 1;
+    string newURL = 2;
+    string userID = 3;
+    int32 count = 4;
+}
