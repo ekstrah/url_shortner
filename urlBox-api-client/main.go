@@ -26,19 +26,30 @@ func main() {
 		log.Fatalf("Failed to connect to 9000 with %v", err)
 	}
 	client := pb.NewGenURLManagementClient(conn)
+
+	// Gin Framework Initialization
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*")
+	r.Static("/static", "./static/css")
+
+	//Gin Router Setup
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.tmpl.html", gin.H{
+			"title": "Main web",
+		})
+	})
+	r.POST("/", func(c *gin.Context) {
+		name := c.PostForm("url")
+		c.JSON(200, gin.H{
+			"url": name,
+		})
+	})
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 		msg := &pb.ExURLReq{OriURL: "https://google.com", UserID: "ekstrah"}
 		Send_GenMessage(client, msg)
-	})
-	r.GET("/index", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"title": "Main website",
-		})
 	})
 
 	r.Run(":8080") //

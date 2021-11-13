@@ -1,0 +1,39 @@
+<html>
+
+<head>
+    <link link rel="stylesheet" type="text/css" href="./static/tailwind.css">
+</head>
+
+<body>
+    <div class="relative min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-gray-500 bg-no-repeat bg-cover relative items-center"
+        style="background-image: url(https://source.unsplash.com/random/1920x1080);">
+        <div class="absolute bg-black opacity-60 inset-0 z-0"></div>
+        <div class="mt-2 items-center z-10">
+            <form class="p-14 bg-white max-w-sm mx-auto rounded-xl shadow-xl overflow-hidden p-6 space-y-10" name="myForm" id="myForm" method="post">
+                <h2 class="text-4xl font-bold text-center text-indigo-600">Tinify</h2>
+                <div class="f-outline px-2 relative border rounded-lg focus-within:border-indigo-500">
+                    <input type="url" name="url" placeholder=" "
+                        class="block p-2 w-full text-lg appearance-none focus:outline-none bg-transparent" />
+                    <label for="url"
+                        class="absolute ml-5 top-0 text-lg text-gray-700 bg-white mt-2 -z-1 duration-300 origin-0">URL</label>
+                </div>
+                <div class="flex items-center flex items-center justify-center mt-4">
+                    <button
+                        class="px-6 py-2 justify-center font-semibold cursor-pointer text-center focus:outline-none transition hover:shadow-lg shadow hover:bg-indigo-700 rounded-full text-white bg-indigo-600" type="submit">
+                        Generate
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <style>
+        .f-outline input:focus-within~label,
+        .f-outline input:not(:placeholder-shown)~label {
+            transform: translateY(-1.5rem) translatex(-1rem) scaleX(0.80) scaleY(0.80);
+        }
+    </style>
+</body>
+
+</html>
