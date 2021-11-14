@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GenURLManagementClient interface {
 	GenNewURL(ctx context.Context, in *ExURLReq, opts ...grpc.CallOption) (*ExURLRes, error)
+	ReDirURL(ctx context.Context, in *ReDirReq, opts ...grpc.CallOption) (*ReDirRes, error)
 }
 
 type genURLManagementClient struct {
@@ -38,11 +39,21 @@ func (c *genURLManagementClient) GenNewURL(ctx context.Context, in *ExURLReq, op
 	return out, nil
 }
 
+func (c *genURLManagementClient) ReDirURL(ctx context.Context, in *ReDirReq, opts ...grpc.CallOption) (*ReDirRes, error) {
+	out := new(ReDirRes)
+	err := c.cc.Invoke(ctx, "/urlBox.GenURLManagement/ReDirURL", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GenURLManagementServer is the server API for GenURLManagement service.
 // All implementations must embed UnimplementedGenURLManagementServer
 // for forward compatibility
 type GenURLManagementServer interface {
 	GenNewURL(context.Context, *ExURLReq) (*ExURLRes, error)
+	ReDirURL(context.Context, *ReDirReq) (*ReDirRes, error)
 	mustEmbedUnimplementedGenURLManagementServer()
 }
 
@@ -52,6 +63,9 @@ type UnimplementedGenURLManagementServer struct {
 
 func (UnimplementedGenURLManagementServer) GenNewURL(context.Context, *ExURLReq) (*ExURLRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenNewURL not implemented")
+}
+func (UnimplementedGenURLManagementServer) ReDirURL(context.Context, *ReDirReq) (*ReDirRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReDirURL not implemented")
 }
 func (UnimplementedGenURLManagementServer) mustEmbedUnimplementedGenURLManagementServer() {}
 
@@ -84,6 +98,24 @@ func _GenURLManagement_GenNewURL_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GenURLManagement_ReDirURL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReDirReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GenURLManagementServer).ReDirURL(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/urlBox.GenURLManagement/ReDirURL",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GenURLManagementServer).ReDirURL(ctx, req.(*ReDirReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GenURLManagement_ServiceDesc is the grpc.ServiceDesc for GenURLManagement service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -94,6 +126,10 @@ var GenURLManagement_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GenNewURL",
 			Handler:    _GenURLManagement_GenNewURL_Handler,
+		},
+		{
+			MethodName: "ReDirURL",
+			Handler:    _GenURLManagement_ReDirURL_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

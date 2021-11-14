@@ -6,7 +6,18 @@ option go_package = "ekstrah.com/go-protoBox-grpc;go_urlBox_grpc";
 
 service GenURLManagement {
     rpc GenNewURL (ExURLReq) returns (ExURLRes) {}
+    rpc ReDirURL (ReDirReq) returns (ReDirRes) {}
 }
+
+
+message ReDirReq {
+    string ReqURL = 1;
+}
+
+message ReDirRes {
+    string ResURL = 1;
+}
+
 
 message ExURLReq {
     string oriURL = 1;

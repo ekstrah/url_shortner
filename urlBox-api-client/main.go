@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -12,12 +11,20 @@ import (
 	"google.golang.org/grpc"
 )
 
-func Send_GenMessage(client pb.GenURLManagementClient, msg *pb.ExURLReq) {
+func Send_GenMessage(client pb.GenURLManagementClient, msg *pb.ExURLReq) string {
 	resp, err := client.GenNewURL(context.Background(), msg)
 	if err != nil {
-		log.Fatal("Error Getting a response %v", err)
+		log.Fatal("Error Getting a response on GenURL %v", err)
 	}
-	fmt.Println(resp)
+	return resp.GetNewURL()
+}
+
+func Get_ReDirURL(client pb.GenURLManagementClient, msg *pb.ReDirReq) string {
+	resp, err := client.ReDirURL(context.Background(), msg)
+	if err != nil {
+		log.Fatal("Error getting a response on ReDirURL %v", err)
+	}
+	return resp.GetResURL()
 }
 
 func main() {
@@ -30,7 +37,7 @@ func main() {
 	// Gin Framework Initialization
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*")
-	r.Static("/static", "./static/css")
+	r.Static("/static", "./static")
 
 	//Gin Router Setup
 	r.GET("/", func(c *gin.Context) {
@@ -39,17 +46,20 @@ func main() {
 		})
 	})
 	r.POST("/", func(c *gin.Context) {
-		name := c.PostForm("url")
+		uurl := c.PostForm("url")
+		msg := &pb.ExURLReq{OriURL: uurl, UserID: "free"}
+		NUrl := Send_GenMessage(client, msg)
 		c.JSON(200, gin.H{
-			"url": name,
+			"oriURL": uurl,
+			"newURL": NUrl,
 		})
 	})
 	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-		msg := &pb.ExURLReq{OriURL: "https://google.com", UserID: "ekstrah"}
-		Send_GenMessage(client, msg)
+
+		ReURL := "WtNGsTC"
+		msg := &pb.ReDirReq{ReqURL: ReURL}
+		OURL := Get_ReDirURL(client, msg)
+		c.Redirect(http.StatusMovedPermanently, OURL)
 	})
 
 	r.Run(":8080") //
