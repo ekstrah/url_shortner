@@ -49,14 +49,21 @@ func main() {
 		uurl := c.PostForm("url")
 		msg := &pb.ExURLReq{OriURL: uurl, UserID: "free"}
 		NUrl := Send_GenMessage(client, msg)
-		c.JSON(200, gin.H{
-			"oriURL": uurl,
-			"newURL": NUrl,
+		NUrl = "http://localhost:8080/" + NUrl
+		c.HTML(http.StatusOK, "simple.tmpl.html", gin.H{
+			"NURL": NUrl,
 		})
 	})
 	r.GET("/ping", func(c *gin.Context) {
 
 		ReURL := "WtNGsTC"
+		msg := &pb.ReDirReq{ReqURL: ReURL}
+		OURL := Get_ReDirURL(client, msg)
+		c.Redirect(http.StatusMovedPermanently, OURL)
+	})
+	r.GET("/:NURL", func(c *gin.Context) {
+		name := c.Param("NURL")
+		ReURL := name
 		msg := &pb.ReDirReq{ReqURL: ReURL}
 		OURL := Get_ReDirURL(client, msg)
 		c.Redirect(http.StatusMovedPermanently, OURL)
