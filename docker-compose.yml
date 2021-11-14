@@ -1,0 +1,14 @@
+version: '3'
+services:
+  BoxDb:
+    image: "mongo"
+    ports:
+      - "27017:27017"
+  boxserver:
+    build: ./urlbox-api-server/
+    ports:
+      - "9000:9000"
+  boxclient:
+    build: ./urlbox-api-client/
+    ports:
+      - "8080:8080"
